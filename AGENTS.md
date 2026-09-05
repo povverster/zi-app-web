@@ -36,6 +36,21 @@ UI tests, and eventually its own Dockerfile.
   a stage, including real commands and checks that future contributors can run.
 - The roadmap guides later work; adding this guide does not start all those stages.
 
+## Changelog maintenance
+
+- Update [CHANGELOG.md](CHANGELOG.md) under `Unreleased` in the same task as each
+  notable completed feature, behavior change, fix, or security improvement.
+- Use the relevant Keep a Changelog categories: `Added`, `Changed`, `Deprecated`,
+  `Removed`, `Fixed`, and `Security`. Omit empty categories and describe the
+  effect for users or developers rather than copying commit messages.
+- Document breaking changes and any required configuration or migration steps.
+  Minor formatting edits do not need separate entries.
+- Keep future work in this guide's development checklist, not in the changelog.
+  For changes spanning repositories, update each affected repository's changelog.
+- Move unreleased entries into a version/date section when an actual release is
+  made. Do not invent historical releases or treat a commit as a release.
+  A changelog update alone does not authorize tagging, publishing, or deployment.
+
 ## Existing backend contract
 
 Read the [authentication guide](../zi-app-api/docs/security/authentication.md)
