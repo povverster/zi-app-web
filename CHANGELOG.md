@@ -18,4 +18,7 @@ Planned work and development instructions are in [AGENTS.md](AGENTS.md).
 
 ### Changed
 
+- Documented the available portfolio API contract and archive/restore behavior
+  for the upcoming portfolio UI stage. Frontend implementation remains pending.
+
 - Standardized text files on LF line endings through Git and editor settings.

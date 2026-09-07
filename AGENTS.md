@@ -70,9 +70,18 @@ and inspect current Swagger/API contracts before implementing clients.
   for same-origin browser requests, and a same-origin reverse proxy in production.
   Confirm cookie and CSRF behavior end to end when configuring the proxy.
 
-Portfolio, trade, rate, split, reporting, and statistics endpoints are not yet
-implemented at the baseline below. Coordinate their contracts with the API repo;
-make development fixtures explicit and do not present mock data as persisted data.
+Portfolio endpoints are available as of 2026-09-07:
+`GET/POST /api/portfolios`, `GET/PUT /api/portfolios/{id}`, and
+`POST /api/portfolios/{id}/archive` or `/restore`.
+See the [portfolio contract](../zi-app-api/docs/portfolios/portfolio-management.md)
+for payloads, pagination, and status codes. Names are trimmed and case-sensitive;
+new portfolios use USD. Archived portfolios retain their data and reserve their
+names. Hard deletion is unavailable. Scope is always the signed-in account,
+including for super administrators.
+
+Trade, rate-import, split-management, reporting, and statistics endpoints remain
+pending. Coordinate their contracts with the API repo; make development fixtures
+explicit and do not present mock data as persisted data.
 
 ## Development progress
 
@@ -93,8 +102,8 @@ Baseline inspected on 2026-09-05, at commit `d16aa69`.
 2. [ ] Authentication UI: login, session restoration, logout, protected navigation,
    and super-admin account creation. Test cookies/CSRF against the real API,
    failed login, expired sessions, forbidden access, and all three languages.
-3. [ ] Portfolio UI after the API is available: list/create/edit and the agreed
-   archive/delete workflow. Include loading, empty, validation, and error states;
+3. [ ] Portfolio UI using the existing API: list/create/rename and reversible
+   archive/restore. Include loading, empty, validation, and error states;
    verify persistence after reload and isolation with two accounts.
 4. [ ] Instrument and trade workflows: manual buys/sells, fees, broker timestamps,
    rate provenance, transaction history, and audited corrections. Test decimal
