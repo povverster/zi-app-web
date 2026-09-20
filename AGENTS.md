@@ -90,7 +90,26 @@ tax-ready. Duplicate broker IDs return `409`, not a successful retry. Current
 lists exclude superseded originals; corrections keep the original FIFO ordering
 key. Archived portfolios reject both creation and correction until restored.
 
-Rate-import, split-management, reporting, and statistics endpoints remain pending.
+NBU rate APIs are available as of 2026-09-20. Read the
+[rate contract](../zi-app-api/docs/exchange-rates/nbu-exchange-rates.md):
+
+- `GET /api/exchange-rates/usd/{date}` reads cache only.
+- `POST /api/exchange-rates/usd/{date}/fetch` fetches/caches a public USD rate.
+- `GET /api/portfolios/{portfolioId}/trades/{tradeId}/exchange-rate` reads status.
+- `POST /api/portfolios/{portfolioId}/trades/{tradeId}/exchange-rate/resolve`
+  selects and attaches a rate with an audit trail.
+
+All require an active session; POST requires CSRF. Let the backend choose the
+trade date/rate; these POSTs need no body. The user confirmed all broker dates,
+including old ones, are correct: never shift their rate dates to browser/UTC/Kyiv
+time. Keep original broker date visible even if another display timezone is offered.
+Rates are decimal strings. Show Pending, LinkedUnverified, and Resolved distinctly;
+none means filing-ready (`isTaxReady` remains false). Display NBU attribution/source
+links and provenance. Missing exact-date rates stay pending, without weekend fallback.
+Corrections retain the original's rate history and start replacements pending.
+No scheduler or automatic backfill is available; use explicit per-trade resolution.
+
+Split-management, reporting, and statistics endpoints remain pending.
 Coordinate their contracts with the API repo; make development fixtures explicit
 and do not present mock data as persisted data.
 

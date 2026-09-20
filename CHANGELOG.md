@@ -18,6 +18,10 @@ Planned work and development instructions are in [AGENTS.md](AGENTS.md).
 
 ### Changed
 
+- Documented the available NBU fetch/cache and trade-rate resolution APIs,
+  decimal-string rates, source attribution, audit/status displays, and unchanged
+  broker calendar dates for both new and legacy trades. No frontend code was added.
+
 - Documented the available instrument/manual-trade API, precise decimal-string
   inputs, timestamp offsets, audited corrections, and pending-rate states for the
   future trade UI. Frontend implementation remains pending.
