@@ -79,13 +79,25 @@ new portfolios use USD. Archived portfolios retain their data and reserve their
 names. Hard deletion is unavailable. Scope is always the signed-in account,
 including for super administrators.
 
-Trade, rate-import, split-management, reporting, and statistics endpoints remain
-pending. Coordinate their contracts with the API repo; make development fixtures
-explicit and do not present mock data as persisted data.
+Instrument and manual trade APIs are available as of 2026-09-20. Read the
+[trade contract](../zi-app-api/docs/trading/manual-trade-entry.md): searchable catalog,
+admin-only instrument creation, owner-scoped trade list/create/get, paginated
+correction audit, and replacement corrections with a required reason.
+Quantity/price/fee values are exact invariant decimal JSON strings, not numbers.
+Execution timestamps require an explicit offset; retain original inputs and use
+locale formatting only for display. New trades have pending rates and are not
+tax-ready. Duplicate broker IDs return `409`, not a successful retry. Current
+lists exclude superseded originals; corrections keep the original FIFO ordering
+key. Archived portfolios reject both creation and correction until restored.
+
+Rate-import, split-management, reporting, and statistics endpoints remain pending.
+Coordinate their contracts with the API repo; make development fixtures explicit
+and do not present mock data as persisted data.
 
 ## Development progress
 
 Baseline inspected on 2026-09-05, at commit `d16aa69`.
+Backend-contract notes updated on 2026-09-20; no frontend code was scaffolded.
 
 - [x] Separate Git repository and placeholder README.
 - [x] Shared LF line-ending conventions.

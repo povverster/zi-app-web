@@ -18,6 +18,9 @@ Planned work and development instructions are in [AGENTS.md](AGENTS.md).
 
 ### Changed
 
+- Documented the available instrument/manual-trade API, precise decimal-string
+  inputs, timestamp offsets, audited corrections, and pending-rate states for the
+  future trade UI. Frontend implementation remains pending.
 - Documented the available portfolio API contract and archive/restore behavior
   for the upcoming portfolio UI stage. Frontend implementation remains pending.
 
