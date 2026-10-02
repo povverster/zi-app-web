@@ -18,6 +18,10 @@ Planned work and development instructions are in [AGENTS.md](AGENTS.md).
 
 ### Changed
 
+- Documented admin-only shared splits and audited corrections, private holdings/
+  FIFO results, historical cutoff semantics, exact decimal-string results and
+  incomplete-rate/null-total handling. No frontend screens or tooling were added.
+
 - Documented the available NBU fetch/cache and trade-rate resolution APIs,
   decimal-string rates, source attribution, audit/status displays, and unchanged
   broker calendar dates for both new and legacy trades. No frontend code was added.

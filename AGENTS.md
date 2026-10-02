@@ -109,14 +109,36 @@ links and provenance. Missing exact-date rates stay pending, without weekend fal
 Corrections retain the original's rate history and start replacements pending.
 No scheduler or automatic backfill is available; use explicit per-trade resolution.
 
-Split-management, reporting, and statistics endpoints remain pending.
+Split and holdings APIs are available as of 2026-10-02. Read the
+[split/holdings contract](../zi-app-api/docs/holdings/splits-and-holdings.md):
+
+- Active users can read shared instrument splits; only super admins create or
+  correct them (CSRF required). Changes affect all owners, not just one portfolio.
+  Show the original timestamp, source/actor/time and correction history. Render
+  source references safely as text; they are not fetched/verified by the API.
+- `GET /api/portfolios/{portfolioId}/holdings?asOf=...` is owner-only, including
+  archived portfolios, and exposes positions/open lots/realized FIFO matches.
+  URL-encode timestamp offsets. Cutoffs replay current revisions, not what was
+  known on that date. There is no tax-year filter yet.
+- Preserve decimal result strings (possibly up to 28 fractional digits), source
+  trade/rate IDs and the calculation version `fifo-uah-v2-remaining-cost`.
+- Show quantities and PendingRates blockers while an instrument's financials
+  are null. Complete instruments can display their results, but portfolio totals
+  remain null if any instrument is pending. Never substitute zero for null.
+- `isComplete` means the calculation has rates, not filing readiness;
+  `isTaxReady` stays false. GET never resolves rates or saves a tax report.
+- Split corrections preserve FIFO keys/originals. No deletion/cancellation or
+  automatic cash-in-lieu workflow exists. New entries reject duplicate active
+  effective instants. Only current revisions are listed by default.
+
+Reporting and statistics endpoints remain pending.
 Coordinate their contracts with the API repo; make development fixtures explicit
 and do not present mock data as persisted data.
 
 ## Development progress
 
 Baseline inspected on 2026-09-05, at commit `d16aa69`.
-Backend-contract notes updated on 2026-09-20; no frontend code was scaffolded.
+Backend-contract notes updated on 2026-10-02; no frontend code was scaffolded.
 
 - [x] Separate Git repository and placeholder README.
 - [x] Shared LF line-ending conventions.
