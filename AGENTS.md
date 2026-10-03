@@ -131,14 +131,36 @@ Split and holdings APIs are available as of 2026-10-02. Read the
   automatic cash-in-lieu workflow exists. New entries reject duplicate active
   effective instants. Only current revisions are listed by default.
 
-Reporting and statistics endpoints remain pending.
-Coordinate their contracts with the API repo; make development fixtures explicit
-and do not present mock data as persisted data.
+Saved draft reporting APIs are available as of 2026-10-03. Read the
+[report contract](../zi-app-api/docs/reports/draft-tax-reports.md):
+
+- Owner-only `POST /api/portfolios/{portfolioId}/tax-reports` with `{ "taxYear": 2025 }`
+  and CSRF saves one portfolio/year draft. Archived owned portfolios are supported.
+- GET the collection for paginated history, `/{id}` for the saved snapshot,
+  `/{id}/current-status` for source comparison, and `/{id}/export?format=csv|json`
+  for downloads. Only lowercase `csv` or `json` is accepted.
+- Select sales by their unchanged broker calendar year, not browser/UTC year.
+  The backend replays earlier trades/splits to consume prior FIFO lots.
+- Every report is `Draft` with `isTaxReady: false`. Do not imply tax payable,
+  official filing forms or final rounding are implemented. Preserve all decimal strings.
+- Unresolved included rates block creation with 409 `UnresolvedRates` and trade
+  blockers; there is no partial report. Report operations never fetch/resolve rates.
+- GET/export uses saved inputs/results, even after corrections. Show current-status
+  separately: Current, InputsChanged, or CurrentInputsInvalid (unknown, not current).
+  Recalculation is an explicit new POST, not replacement of the saved report.
+- Legacy runs without full snapshots return 409 `LegacySnapshotUnavailable` for
+  details/status/export; don't invent a reconstructed report in the client.
+- Download attachments unchanged. CSV prefixes user text with a literal apostrophe
+  for formula safety; import financial columns as text to avoid spreadsheet precision
+  loss. JSON retains original text and is the authoritative complete snapshot.
+
+Statistics endpoints remain pending. Coordinate their contracts with the API repo;
+make development fixtures explicit and do not present mock data as persisted data.
 
 ## Development progress
 
 Baseline inspected on 2026-09-05, at commit `d16aa69`.
-Backend-contract notes updated on 2026-10-02; no frontend code was scaffolded.
+Backend-contract notes updated on 2026-10-03; no frontend code was scaffolded.
 
 - [x] Separate Git repository and placeholder README.
 - [x] Shared LF line-ending conventions.
@@ -163,9 +185,11 @@ Backend-contract notes updated on 2026-10-02; no frontend code was scaffolded.
    entry, localized display, duplicates, and API validation errors.
 5. [ ] Holdings and splits: show positions and realized results, add the permitted
    split-management workflow, and verify results against the backend FIFO cases.
-6. [ ] Tax report UI: year/portfolio selection, calculation details, source rates,
-   lot matches, and exports. Follow agreed report scope and rounding; reconcile
-   displayed/exported values with saved backend results.
+6. [ ] Draft report UI using the existing API: one portfolio/year selection,
+   saved history/details, source rates/lot matches, changed-input status and exports.
+   Keep draft/non-filing-ready labels and full-precision strings; no client tax
+   calculation. Reconcile displayed/exported values with saved backend results.
+   Official filing features await separately validated backend contracts.
 7. [ ] Statistics and S&P 500 comparison: charts and tables based on the agreed
    valuation/return methodology, including dates, currency, and dividend treatment.
 8. [ ] Release preparation: accessibility and responsive review, browser tests for

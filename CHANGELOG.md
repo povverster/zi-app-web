@@ -18,6 +18,11 @@ Planned work and development instructions are in [AGENTS.md](AGENTS.md).
 
 ### Changed
 
+- Documented the saved draft report API: one portfolio/year, immutable full-precision
+  snapshots, private history/details, rate blockers, current-input comparison and
+  CSV/JSON downloads. Includes draft labeling, legacy-run handling and spreadsheet
+  precision/formula-safety guidance. No frontend code or tooling was added.
+
 - Documented admin-only shared splits and audited corrections, private holdings/
   FIFO results, historical cutoff semantics, exact decimal-string results and
   incomplete-rate/null-total handling. No frontend screens or tooling were added.
