@@ -18,6 +18,11 @@ Planned work and development instructions are in [AGENTS.md](AGENTS.md).
 
 ### Changed
 
+- Documented the implemented 2025 annual preparation API: explicit source-report
+  selection, reviewed coverage, unverified external inputs/loss claims, signed
+  decimal-string subtotals, JSON exports and separate current-source comparisons.
+  Preserved portfolio-report and non-filing-ready boundaries. No UI/tooling added.
+
 - Recorded the agreed 2025 filing scope and separate annual-summary design,
   preserving one-portfolio drafts and distinguishing planned preparation summaries
   from existing APIs. Documented unresolved legal/form gates and sample provenance;
