@@ -18,6 +18,11 @@ Planned work and development instructions are in [AGENTS.md](AGENTS.md).
 
 ### Changed
 
+- Recorded the agreed 2025 filing scope and separate annual-summary design,
+  preserving one-portfolio drafts and distinguishing planned preparation summaries
+  from existing APIs. Documented unresolved legal/form gates and sample provenance;
+  no frontend code, endpoints or tooling were added.
+
 - Documented the saved draft report API: one portfolio/year, immutable full-precision
   snapshots, private history/details, rate blockers, current-input comparison and
   CSV/JSON downloads. Includes draft labeling, legacy-run handling and spreadsheet

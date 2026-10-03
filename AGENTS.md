@@ -154,6 +154,25 @@ Saved draft reporting APIs are available as of 2026-10-03. Read the
   for formula safety; import financial columns as text to avoid spreadsheet precision
   loss. JSON retains original text and is the authoritative complete snapshot.
 
+### Filing research and separate annual summary
+
+The [2025 filing-readiness review](../zi-app-api/docs/reports/ua-2025-filing-readiness.md)
+records the user's scope: Ukrainian tax-resident individuals, personal foreign-
+broker stock/ETF sales, initially year 2025. Legal FX/fee/loss/FIFO/rounding and
+form-version validation remains open. Research is not a new filing-ready contract.
+
+The user approved a separate taxpayer-year summary with relevant portfolios,
+outside-app activity and prior-loss claims. **No annual-summary endpoints exist
+yet.** Preserve the existing one-portfolio drafts. The next backend stage is a
+saved annual preparation draft, not tax payable, official forms or accepted loss
+deductions. Future UI must distinguish unknown coverage, confirmed none and
+supplied data, and show source selection and unverified claims without treating
+them as legal approval. Do not implement client-side tax calculations.
+
+The [sample audit](../zi-app-api/docs/domain/spreadsheet-sample-audit.md) records
+read-only examples and the user's BXMT correction to 18.08 USD. Personal source
+workbooks are not frontend fixtures or CI dependencies.
+
 Statistics endpoints remain pending. Coordinate their contracts with the API repo;
 make development fixtures explicit and do not present mock data as persisted data.
 
@@ -161,6 +180,8 @@ make development fixtures explicit and do not present mock data as persisted dat
 
 Baseline inspected on 2026-09-05, at commit `d16aa69`.
 Backend-contract notes updated on 2026-10-03; no frontend code was scaffolded.
+The same day's filing-research handoff distinguishes planned annual summaries
+from existing draft-report endpoints. No frontend build/test suite was run or added.
 
 - [x] Separate Git repository and placeholder README.
 - [x] Shared LF line-ending conventions.
@@ -189,6 +210,8 @@ Backend-contract notes updated on 2026-10-03; no frontend code was scaffolded.
    saved history/details, source rates/lot matches, changed-input status and exports.
    Keep draft/non-filing-ready labels and full-precision strings; no client tax
    calculation. Reconcile displayed/exported values with saved backend results.
+   Add a separate annual-summary UI only after its backend contract exists; keep
+   portfolio drafts intact, coverage gaps visible and loss claims unverified.
    Official filing features await separately validated backend contracts.
 7. [ ] Statistics and S&P 500 comparison: charts and tables based on the agreed
    valuation/return methodology, including dates, currency, and dividend treatment.
