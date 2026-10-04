@@ -12,16 +12,18 @@ The API owns authentication enforcement, persistence, FIFO, and tax calculations
 This repository owns screens, forms, API integration, localization, accessibility,
 UI tests, and eventually its own Dockerfile.
 
-## Working agreement and planned stack
+## Working agreement and stack
 
 - Read this guide and inspect current files/Git status before changes. Preserve
   unrelated work and develop one testable stage at a time.
-- Planned stack: React, TypeScript, Vite, and free/open-source UI components.
-  Tailwind CSS, shadcn/ui, TanStack Table, and Recharts were proposed; none are
-  installed yet. Check suitability and licensing when introducing dependencies.
+- Implemented stack: React 19, TypeScript 6, Vite 8, React Router, Tailwind CSS 4,
+  i18next/react-i18next, Lucide icons and a local Radix Slot/CVA button primitive.
+  Dependencies are free/open-source. No shadcn CLI/generated components, table
+  library or chart library is installed. Add components deliberately when needed.
 - Keep LF line endings and follow `.editorconfig` and `.gitattributes`.
-- Introduce and document the package manager, supported Node version, scripts,
-  and lock file during scaffolding. Do not create competing lock files.
+- Use Node 22.23.2 (.nvmrc), npm 10.9.8 and the committed package-lock.json.
+  Use npm ci; do not create competing lock files. TypeScript 6.0.3 is intentional:
+  typescript-eslint 8.71 supports <6.1, not the newer TypeScript 7 release.
 - Support English (`en`), Ukrainian (`uk`), and Russian (`ru`) from the first
   real screens. API language values are `English`, `Ukrainian`, and `Russian`;
   map them explicitly. Use translation keys and locale-aware display formatting.
@@ -66,9 +68,11 @@ and inspect current Swagger/API contracts before implementing clients.
   authorization; hiding a button is not access control.
 - Authentication uses HTTP-only cookies. Preserve this flow and handle `401`
   and `403` responses explicitly.
-- Plan a Vite development proxy to the local API at `http://localhost:5050`
-  for same-origin browser requests, and a same-origin reverse proxy in production.
-  Confirm cookie and CSRF behavior end to end when configuring the proxy.
+- Vite now proxies /api and /health boundaries to `http://localhost:5050`.
+  API_PROXY_TARGET is a server-only origin setting; no browser VITE_* secrets.
+  Loopback tests verify cookie/header forwarding, not real Identity/CSRF behavior.
+  Verify real API authentication in the next stage. A production same-origin
+  reverse proxy remains infra work; Vite preview is not a production server.
 
 Portfolio endpoints are available as of 2026-09-07:
 `GET/POST /api/portfolios`, `GET/PUT /api/portfolios/{id}`, and
@@ -192,22 +196,58 @@ make development fixtures explicit and do not present mock data as persisted dat
 
 ## Development progress
 
-Baseline inspected on 2026-09-05, at commit `d16aa69`.
-Backend-contract notes updated on 2026-10-04 for implemented annual preparation
-drafts. No frontend code was scaffolded or frontend build/test suite run/added.
+### Available backend: user-configured reporting, 2026-10-04
+
+Read the [configured-report contract](../zi-app-api/docs/reports/configured-tax-reports.md)
+before building settings/report screens. The user clarified that configurable
+spreadsheet-based reports, not official filing certification, are the immediate
+goal. Specialist review is not a blocker for those screens/calculations.
+
+- Private `GET/POST /api/tax-settings/{year}` and `/{year}/history` save/read
+  immutable revisions; use explicit same-year settings, never today's rates for
+  older years. Percentages are decimal strings in [0, 100], up to four places.
+- The user's example is investment income 18%, military 5%, dividend income 9%.
+  No settings are implicitly seeded. The dividend rate is stored but not applied:
+  the user explicitly deferred dividend recording/calculation.
+- `POST /api/portfolios/{id}/configured-tax-reports` selects `sourceReportId`
+  and `settingsId`. GET history/details, JSON/CSV export and current-status.
+  Existing portfolio drafts and the separate 2025 annual preparation API remain.
+- Display signed `netProfitUah` and `lossUah` separately from taxes. A loss
+  of `-10000` must stay visible while income/military/total taxes show `0.00`.
+  Never replace a negative result with zero or present it as a refund.
+- Taxes apply to positive annual net realized profit only; each final tax rounds
+  to two places, half away from zero. The backend owns arithmetic; preserve strings.
+- Label `UserConfigured`, dividends `NotIncluded` and `isTaxReady: false` clearly;
+  that flag means no official filing certification, not absent configured taxes.
+  No withholding/accepted carryforward or taxpayer-wide tax aggregation exists.
+- Changing settings appends a revision; generating again creates another report.
+  Do not rewrite old displays/exports with current rates or recompute in JavaScript.
+
+### Current handoff: frontend foundation, 2026-10-05
+
+**Next shared stage: authentication UI (step 2 below).** Foundation is implemented;
+do not scaffold a second app or resume the superseded specialist-review blocker.
+Read [README](README.md), [foundation decisions](docs/frontend-foundation.md) and
+the full API authentication guide before starting. Preserve the existing shell.
+
+Implemented: localized overview, explicit read-only connection check, unknown-route
+page, keyboard route focus/skip link, browser language preference, API read helper,
+proxy, UI primitive, pinned toolchain, unit/UI tests, browser tests and CI.
+There are no sign-in, account-management, portfolio, trade, report/settings or
+statistics screens yet. No account or financial data is loaded by this stage.
+User tax settings and signed losses remain backend-owned.
 
 - [x] Separate Git repository and placeholder README.
 - [x] Shared LF line-ending conventions.
-- [ ] Runnable frontend foundation: there is currently no `package.json`,
-  React/Vite app, dependency lock file, frontend test setup, CI, or Dockerfile.
+- [x] Runnable React/Vite foundation, lock file, three locales, proxy and checks.
 - [ ] Product UI: no login, portfolio, trade, report, or statistics screens yet.
+- [ ] Production web Dockerfile and same-origin TLS deployment.
 
 ## Remaining development steps
 
-1. [ ] Frontend foundation: scaffold React/TypeScript/Vite, establish the package
-   manager and lock file, add routing, the UI component foundation, three-language
-   setup, API proxy, environment example, and setup documentation. Add type checks,
-   linting, a build, suitable UI tests, and CI; verify a responsive starter page.
+1. [x] Frontend foundation: React/TypeScript/Vite, npm/lock file, routing,
+   Radix/Tailwind component foundation, en/uk/ru, API proxy, environment example,
+   setup docs, type/lint/format/build checks, UI/browser tests and CI.
 2. [ ] Authentication UI: login, session restoration, logout, protected navigation,
    and super-admin account creation. Test cookies/CSRF against the real API,
    failed login, expired sessions, forbidden access, and all three languages.
@@ -226,6 +266,8 @@ drafts. No frontend code was scaffolded or frontend build/test suite run/added.
    Add a separate annual-summary UI using its now-existing backend contract; keep
    portfolio drafts intact, coverage gaps visible and loss claims unverified.
    Official filing features await separately validated backend contracts.
+   Add year-specific rate settings and configured tax reports using the contract
+   above. Keep negative losses visible alongside zero tax and dividends NotIncluded.
 7. [ ] Statistics and S&P 500 comparison: charts and tables based on the agreed
    valuation/return methodology, including dates, currency, and dividend treatment.
 8. [ ] Release preparation: accessibility and responsive review, browser tests for
@@ -237,12 +279,30 @@ their backend contracts and the product priorities agreed for those stages.
 
 ## Verification
 
-There are no frontend build/test commands yet. Do not claim `npm run` checks
-passed in this baseline repository. During scaffolding, add the actual install,
-development, typecheck, lint, test, and production-build commands to README and
-this guide, matching the chosen package manager.
+Run from this repository root:
 
-For UI changes once runnable, run the relevant checks and exercise the affected
+```powershell
+npm ci
+npm run check
+npx playwright install chromium
+npm run test:e2e
+git diff --check
+```
+
+`npm run check` runs typecheck, lint, formatting, unit/UI tests and the production
+build. Browser tests use isolated loopback servers (4173/5510), not the user's API
+or database. See README for preview-build checks and platform browser prerequisites.
+Screenshots/traces stay in ignored test-results/playwright-report folders.
+
+Verified locally on 2026-10-05: clean `npm ci`, all `npm run check` stages,
+46 unit/component tests, and 12 browser cases each against dev and built-preview
+servers. Desktop/mobile screenshots were inspected; automated accessibility checks
+passed. npm reported no known vulnerabilities at the time of checking.
+LF, local Markdown links and diff checks passed across all three repositories.
+The GitHub workflow is configured but was not remotely run; real API login is
+not tested or implemented yet. No user DB migrations, commits or pushes were made.
+
+For UI changes, run the relevant checks and exercise the affected
 flow in a browser, including loading/error/empty states and all required locales.
 Report which checks ran and any missing API or environment dependency.
 For documentation-only changes, check links, accuracy, LF endings, and

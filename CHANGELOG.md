@@ -11,12 +11,28 @@ Planned work and development instructions are in [AGENTS.md](AGENTS.md).
 
 ### Added
 
+- Runnable React/TypeScript/Vite foundation with pinned npm tooling, routing,
+  responsive overview, read-only connection checks and an explicit preview state.
+- English/Ukrainian/Russian translations, persistent browser language choice,
+  API language mapping, keyboard navigation, reduced motion and accessible UI primitives.
+- Same-origin API/health proxy to port 5050, validated environment example and
+  decimal-preserving read helper. No authentication or investment-data screens yet.
+- Type/lint/format/build checks, unit/component and desktop/mobile browser tests,
+  isolated proxy test API, automated accessibility checks and GitHub Actions CI.
+- Setup and continuation documentation identifying authentication UI as the next
+  bounded stage, with real API cookie/CSRF verification still required.
+
 - Separate frontend repository with a placeholder README.
 - An `AGENTS.md` guide documenting the planned React/TypeScript/Vite stack,
   English/Ukrainian/Russian support, existing backend authentication contract,
   development milestones, and changelog maintenance rules.
 
 ### Changed
+
+- Added the year-specific configured tax/settings API handoff, preserved negative
+  loss display with zero taxes, immutable rate/report history and explicit deferred
+  dividend behavior. Updated the next-stage direction to frontend foundation;
+  specialist review no longer blocks user-configured reporting. No UI/tooling added.
 
 - Documented the implemented 2025 annual preparation API: explicit source-report
   selection, reviewed coverage, unverified external inputs/loss claims, signed
